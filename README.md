@@ -41,4 +41,7 @@ Trial order was randomized within blocks. Each door appeared equally often on ei
 # Main results
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_human.jpg)
 
-Note: Risk preference in human across 6 blocks.The analysis was based on data from 28 independent samples. 
+Note: Risk preference in catch trials vs decision trials for human across 6 blocks.The analysis was based on data from 28 independent samples. 
+![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_pigeon.jpg)
+Note: Risk preference in catch trials vs decision trials for pigeons across 6 blocks.The analysis was based on data from 5 independent samples. 
+
