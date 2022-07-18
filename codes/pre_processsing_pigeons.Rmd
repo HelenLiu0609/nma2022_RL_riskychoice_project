@@ -14,7 +14,7 @@ library(qdapRegex)
 
 
 ```{r load data}
-df <- read.csv("~/Desktop/nma_project/data/pigeon_data.csv")
+df <- read.csv("~/Desktop/nma2022_project_RL_riskychoice/data/pigeon_data.csv")
 unique(df$Subject) #6 pigeons
 ```
 
@@ -49,6 +49,7 @@ df_p <- df %>%
   dplyr::filter(participant_id != 948 | Session != 12) %>%
   dplyr::filter(participant_id != 2767 |Session != 5) %>%
   dplyr::filter(participant_id != 2767 |Session != 7) 
+#
    dplyr::group_by(participant_id, Session) %>%
   dplyr::summarise(n = n())
 ```
@@ -149,7 +150,15 @@ stats2 <- dfx %>%
   mutate_at(vars(Session, participant_id), as.factor)
 
 #plotting
-p <- ggplot(
+###save plot
+tiff(
+  file = "descript_pigeon.tiff",
+  res = 800,
+  width = 4000,
+  height = 2500
+)#save tiff
+###
+ggplot(
   data = stats2,
   mapping = aes(
     x = Session,
@@ -157,21 +166,39 @@ p <- ggplot(
     group = participant_id,
     color = participant_id
   )
-) +
-  geom_line(alpha = 0.2) +
-  geom_point(alpha = 0.2, size = 1) +
-  facet_wrap( ~ condition) +
+)  +
+  facet_wrap(~ condition) +
+  theme(strip.background = element_blank(),
+        strip.text.x = element_text(size = 12, color = "Black")) +
+  geom_line(alpha = 0.15) +
+  geom_point(alpha = 0.1, size = 1) +
   stat_summary(
     aes(y = acc, group = 1),
-    fun.y = mean,
-    colour = "red",
-    size = 0.8,
+    fun = mean,
+    colour = "black",
+    size = 0.6,
     geom = "line",
+    alpha = 0.7,
     group = 1
-  )  +
-  labs(x = "Block",y = "poportion of risky choice") +
-  theme_bw()
-p
+  ) +
+  stat_summary(
+    aes(y = acc, group = 1),
+    fun.data = "mean_se",
+    geom = "pointrange",
+    colour = "black",
+    size = 0.2,
+    group = 1
+  ) + # adding error bars (standard error)
+  labs(x = "Block", y = "Poportion of risky choice") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.position = "none",
+    axis.line = element_line(colour = "black")
+  )
+#save graph
+dev.off()
 ```
 
 
