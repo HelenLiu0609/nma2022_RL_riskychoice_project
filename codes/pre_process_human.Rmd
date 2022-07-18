@@ -1,0 +1,163 @@
+---
+title: "pre_process_human"
+author: "Helen_Liu"
+date: "13/07/2022"
+output: html_document
+---
+
+```{r load packages}
+library(tidyverse)
+library(ggplot2)
+library(bruceR)
+```
+
+
+```{r load data}
+df <- read.csv("~/Desktop/nma2022_project_RL_riskychoice/data/human_data.csv")
+#str(df)
+```
+
+
+```{r load data}
+#see how many human participants we have
+length(unique(df$Subject)) #28
+```
+
+
+```{r preprocessing}
+#check data
+#xxx <- df %>% filter(Subject ==1)
+#xxx2 <- xxx %>% filter(TrialType != "NULL")
+#unique(xxx2$Block)
+#unique(xxx$Trial) #48 trials in each blocks 
+#length(xxx2$Trial) 
+#length(unique(xxx2$StimType))
+
+###
+df_new <- df %>% dplyr::select(
+  "participant_id" = "Subject",
+  "TrialType", #three types of trials
+  "StimType", #stimulus
+  "Block", #6 blocks
+  "trial_index" = "Trial", #trial number
+  "response" = "Choice", #participants' choice
+  "RewardAmount", #amount of reward participants gets
+  "CumulativeReward" #the cumulated reward participants gets
+) %>%
+  dplyr::filter(TrialType != "NULL") %>% #exclude the breaks
+  dplyr::mutate(
+    n_Block = case_when( #correct the block numbers
+      Block == "1" ~ "1",
+      Block == "3" ~ "2",
+      Block == "5" ~ "3",
+      Block == "7" ~ "4",
+      Block == "9" ~ "5",
+      Block == "11" ~ "6"
+    )
+  )  %>%
+  dplyr::mutate(
+    TypeTrial = case_when( #mark types of trials 
+    TrialType == "" ~ "forced_choice", # only one door
+    TrialType == "Decision" ~ "Decision Trial", #chose between the safe and risky options with equal expected values 12/34
+    TrialType == "Catch" ~ "Catch Trial" # chose between options of unequal expected value (high versus low) 13/14/23/24
+    )
+  ) %>%
+   dplyr::filter(TypeTrial != "forced_choice") %>% #exclude one door condition 
+  dplyr::mutate(
+    expected_response = case_when( #mark expected response (maximize reward)
+    StimType == "102"|StimType == "201" ~ "Door2", #decision
+    StimType == "103"|StimType == "301" ~ "Door3", #catch
+    StimType == "104"|StimType == "401" ~ "Door4",#catch
+    StimType == "203"|StimType == "302" ~ "Door3", #catch
+    StimType == "204"|StimType == "402" ~ "Door4", #catch
+    StimType == "304"|StimType == "403" ~ "Door4" #decision
+    )
+  )  %>%
+  dplyr::mutate(
+    is_correct = 
+      case_when( #mark accuracy
+   response == expected_response ~ "1", 
+   response != expected_response ~ "0"
+    )
+  ) %>%
+  #dplyr::filter(StimType != 103&301) %>% #20vs60 
+  dplyr::select(-Block,-TrialType)
+head(df_new)
+#length(unique(df_new$participant_id)) #check participants’ number
+```
+
+
+```{r descriptive}
+colnames(df_new)
+stats <- df_new %>%
+  dplyr::group_by(participant_id, n_Block, TypeTrial) %>%
+  mutate(across("is_correct", as.numeric)) %>%
+  dplyr::summarise(n = n(),
+                   acc = mean(is_correct)) %>%
+  mutate_at(vars(n_Block, participant_id), as.factor)
+length(unique(stats$participant_id))
+
+#save stats
+#path_out = '~/Desktop/nma2022_project_RL_riskychoice/data/'#save file
+#fileName = paste(path_out, 'stats_human.csv', sep = '')
+#write_csv(stats, fileName, col_names = TRUE, append = FALSE)
+```
+
+
+```{r ploting}
+
+# plot results 
+colnames(stats)
+p <- ggplot(
+  data = stats,
+  mapping = aes(
+    x = n_Block,
+    y = acc,
+    group = participant_id,
+    color = participant_id
+  )
+) +
+  facet_wrap( ~ TypeTrial) +
+  theme(strip.background = element_blank(),
+        strip.text.x = element_text(size = 12, color = "Black")) +
+  geom_line(alpha = 0.15) +
+  geom_point(alpha = 0.1, size = 1) +
+  stat_summary(
+    aes(y = acc, group = 1),
+    fun = mean,
+    colour = "black",
+    size = 0.6,
+    geom = "line",
+    alpha = 0.7,
+    group = 1
+  ) +
+  stat_summary(aes(y = acc, group = 1),
+    fun.data = "mean_se",
+    geom = "pointrange",
+    colour = "black",
+    size = 0.2,
+    group = 1) + # adding error bars (standard error)
+  labs(x = "Block", y = "Poportion of risky choice") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.position="none",
+    axis.line = element_line(colour = "black")
+  ) 
+
+p
+
+```
+
+
+```{r ploting}
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
