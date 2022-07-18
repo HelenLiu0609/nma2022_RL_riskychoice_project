@@ -23,7 +23,7 @@ Trial order was randomized within blocks. Each door appeared equally often on ei
 
 
 
-![Task schematics]()
+![Task schematics](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/task_scematic.png)
 
 ## Datasheets description 
 - [orignial article](https://github.com/HelenLiu0609/SPE_edu_meta/blob/main/datasheets/summary%20%26%20codebook_final.xlsx) 
