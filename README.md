@@ -1,4 +1,9 @@
 # nma2022_RL_riskychoice_project
+## Original article
+ Ludvig, Madan, C. R., Pisklak, J. M., & Spetch, M. L. (2014). Reward context determines risky choice in pigeons and humans. Biology Letters, 10(8), 20140451–20140451. https://doi.org/10.1098/rsbl.2014.0451
+
+
+
 ## About 
 The current repo contains datasheets and scripts used in nma2022 group project. The current project aim at using Reinforcement learning to model risky choice behavior in pigeons and human.
 ## R environment 
@@ -23,7 +28,7 @@ Trial order was randomized within blocks. Each door appeared equally often on ei
 
 
 
-![Task schematics]()
+![Task schematics](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/task_scematic.png)
 
 ## Datasheets description 
 - [orignial article](https://github.com/HelenLiu0609/SPE_edu_meta/blob/main/datasheets/summary%20%26%20codebook_final.xlsx) 
@@ -34,8 +39,6 @@ Trial order was randomized within blocks. Each door appeared equally often on ei
 - [pre_process_human.Rmd](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/codes/pre_process_human.Rmd) #used to pre process the real human data
 - [pre_processsing_pigeons.Rmd](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/codes/pre_processsing_pigeons.Rmd) #used to pre process the pigeon data
 # Main results
-Human:
-The analysis was based on data from 28 independent samples. 
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_human.jpg)
 
-Note: Risk preference in human across 6 blocks.
+Note: Risk preference in human across 6 blocks.The analysis was based on data from 28 independent samples. 
