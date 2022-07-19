@@ -39,3 +39,10 @@ Note: Risk preference in catch trials vs decision trials for human across 6 bloc
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_pigeon.jpg)
 Note: Risk preference in catch trials vs decision trials for pigeons across 6 blocks.The analysis was based on data from 5 independent samples (one was excluded because of confusing marking). 
 
+# Jupyter Notebook
+## Preserved version
+Please update the debugged code to this version for record.
+https://colab.research.google.com/drive/1j4LI__ICokRESLJ26vrWyhhMk_SRkF0t#scrollTo=EFlNpu_64IhU
+## Working version
+Please use this version to try new ideas and debug.
+https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scrollTo=dmVtt7xWze1I
