@@ -1,3 +1,13 @@
+
+# Jupyter Notebook
+## Preserved version
+Please update the debugged code to this version for record.
+https://colab.research.google.com/drive/1j4LI__ICokRESLJ26vrWyhhMk_SRkF0t#scrollTo=EFlNpu_64IhU
+## Working version
+Please use this version to try new ideas and debug.
+https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scrollTo=dmVtt7xWze1I
+
+
 # nma2022_RL_riskychoice_project
 ## Original article
  Ludvig, Madan, C. R., Pisklak, J. M., & Spetch, M. L. (2014). Reward context determines risky choice in pigeons and humans. Biology Letters, 10(8), 20140451–20140451. https://doi.org/10.1098/rsbl.2014.0451
@@ -39,10 +49,3 @@ Note: Risk preference in catch trials vs decision trials for human across 6 bloc
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_pigeon.jpg)
 Note: Risk preference in catch trials vs decision trials for pigeons across 6 blocks.The analysis was based on data from 5 independent samples (one was excluded because of confusing marking). 
 
-# Jupyter Notebook
-## Preserved version
-Please update the debugged code to this version for record.
-https://colab.research.google.com/drive/1j4LI__ICokRESLJ26vrWyhhMk_SRkF0t#scrollTo=EFlNpu_64IhU
-## Working version
-Please use this version to try new ideas and debug.
-https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scrollTo=dmVtt7xWze1I
