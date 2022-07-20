@@ -48,6 +48,11 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However,to
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_human.jpg)
 
 Note: Risk preference in catch trials vs decision trials for human across 6 blocks. The analysis was based on data from 28 independent samples. 
+![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript2_human.jpg)
+
+Note: Acumulated rewards for human across 6 blocks. The analysis was based on data from 28 independent samples. 
+
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_pigeon.jpg)
 Note: Risk preference in catch trials vs decision trials for pigeons across 6 blocks. The analysis was based on data from 5 independent samples (one was excluded because of confusing marking). 
+
 
