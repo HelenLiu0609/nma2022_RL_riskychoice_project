@@ -9,6 +9,9 @@ Please use this version to try new ideas and debug.
 
 https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scrollTo=dmVtt7xWze1I
 
+# Slides
+For project steps and ideas please see 'NMA Presentation.pptx'.
+
 
 # nma2022_RL_riskychoice_project
 ## Original article
