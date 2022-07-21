@@ -25,7 +25,7 @@ R studio Version 1.4.1717
 ## Task description 
 **Human**
 
-Participants played a computer-based task, and they were instructed to try to **earn as many points as possible**. On each trial, participants saw pictures of 1 or 2 doors on a computer screen and selected one by clicking on it(c). Choices were immediately followed by feedback for 1.2 s, which displayed the points won along with a cartoon graphic of a pot of gold. Feedback was only given for the chosen door. Total accumulated points were continuously displayed on the screen. An inter-trial interval of 1 to 2 s separated trials. Sessions consisted of 6 blocks of 48 trials(40 valid, 8 test trials). Each block included a mixture of trial types: 
+Participants played a computer-based task, and they were instructed to try to **earn as many points as possible**. On each trial, participants saw pictures of 1 or 2 doors on a computer screen and selected one by clicking on it(c). Choices were immediately followed by feedback for 1.2 s, which displayed the points won along with a cartoon graphic of a pot of gold. Feedback was only given for the chosen door. Total accumulated points were continuously displayed on the screen. An inter-trial interval of 1 to 2 s separated trials. Sessions consisted of 6 blocks of 48 trials (40 valid, 8 test trials). Each block included a mixture of trial types: 
  - 24 decision trials that required a choice between either the 2 low-value doors or 2 high-value doors (12 of each).In high-value decisions, the safe door led to 60 points, and the risky door led equiprobably to 40 or 80 points. On low-value decisions, the safe door led to 20 points, and the risky door led equiprobably to 0 or 40 points. 
  - 16 catch trials that required a choice between a high-value door and a low-value door (4 for each combination of safe and risky door). 
 
@@ -50,7 +50,7 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However,to
 Note: Risk preference in catch trials vs decision trials for human across 6 blocks. The analysis was based on data from 28 independent samples. 
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript2_human.jpg)
 
-Note: Acumulated rewards for human across 6 blocks. The analysis was based on data from 28 independent samples. 
+Note: Accumulated rewards for human across 6 blocks. The analysis was based on data from 28 independent samples. 
 
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_pigeon.jpg)
 Note: Risk preference in catch trials vs decision trials for pigeons across 6 blocks. The analysis was based on data from 5 independent samples (one was excluded because of confusing marking). 
