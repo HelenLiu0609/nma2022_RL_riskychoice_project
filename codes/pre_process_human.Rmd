@@ -230,8 +230,95 @@ ggplot(
     legend.position = "none",
     axis.line = element_line(colour = "black")
   )
- dev.off() 
+ dev.off()
+```
 
+
+```{r ploting color options}
+# individual
+df_color <- df_new %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "Door1" ~ "1",
+      response == "Door2" ~ "2",
+      response == "Door3" ~ "3",
+      response == "Door4" ~ "4"
+    )
+  ) %>%
+  select(-expected_response,-is_correct,-response) %>%
+  group_by(participant_id, n_Block, Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n)) %>%
+  mutate_at(vars(n_Block, participant_id), as.factor) %>%
+  mutate_at("p", as.numeric)
+
+#colnames(df_color)
+df_color
+#
+tiff(
+  file = "ppc_human.tiff",
+  res = 800,
+  width = 10000,
+  height = 3500)
+#
+ggplot(data = df_color,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + #geom_col和geom_bar这两条命令都可以绘制堆叠柱形图
+  #geom_col(position = 'stack', width = 0.6)+
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  facet_grid( ~ participant_id) +
+  theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (individual level)")
+ dev.off()
+```
+
+
+```{r ploting color options}
+#average 
+df_color2 <- df_new %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "Door1" ~ "1",
+      response == "Door2" ~ "2",
+      response == "Door3" ~ "3",
+      response == "Door4" ~ "4"
+    )
+  ) %>%
+  select(-expected_response, -is_correct, -response) %>%
+  group_by(n_Block,Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n))%>%
+  mutate_at(vars(n_Block),as.factor)%>%
+  mutate_at("p",as.numeric)
+
+ggplot(data = df_color2,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + #geom_col和geom_bar这两条命令都可以绘制堆叠柱形图
+  #geom_col(position = 'stack', width = 0.6)+
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (average)")
 
 ```
 
