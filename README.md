@@ -9,6 +9,9 @@ Please use this version to try new ideas and debug.
 
 https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scrollTo=dmVtt7xWze1I
 
+## Solved risky decision task using Epsilon Greedy version 
+https://colab.research.google.com/drive/1eInsHxmgeUhS5JHINhZKChe9sxBrc9rK?usp=sharing
+
 # Slides
 For project steps and ideas please see 'NMA Presentation.pptx'.
 
