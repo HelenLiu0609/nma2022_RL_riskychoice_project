@@ -9,8 +9,10 @@ output: html_document
 library(tidyverse)
 library(ggplot2)
 library(bruceR)
+library(ggpubr)
 #
 source('convenient_functions.R')
+source('Function_for_violin_plot.R')
 getwd()
 ```
 
@@ -98,30 +100,44 @@ df_new <- df %>% dplyr::select(
                     response == expected_response ~ "1",
                     response != expected_response ~ "0"
                   )) %>%
-  #dplyr::filter(StimType != 103&301) %>% #20vs60
   dplyr::select(-Block, -TrialType)
 head(df_new)
+```
+
+
+```{r decision trials}
+df_decision <- df_new %>%
+  dplyr::filter(TypeTrial == "Decision Trial") %>% #only select decision
+  dplyr::mutate(
+    ValueCondition =
+      case_when(
+        #mark high vs low value
+        StimType == "102" ~ "Low value",
+        StimType == "201" ~ "Low value",
+        StimType == "304" ~ "High value",
+        StimType == "403" ~ "High value",
+      )
+  ) %>%
+  dplyr::select(-RewardAmount, -CumulativeReward)
+head(df_decision)
 #length(unique(df_new$participant_id)) #check participants’ number
 ```
 
 
-```{r descriptive}
-colnames(df_new)
-stats <- df_new %>%
-  dplyr::group_by(participant_id, n_Block, TypeTrial) %>%
-  mutate(across("is_correct", as.numeric)) %>%
+```{r plot descriptive in  decision}
+colnames(df_decision)
+stats <- df_decision %>%
+  dplyr::group_by(participant_id, n_Block,ValueCondition) %>%
+  mutate_at("is_correct", as.numeric) %>%
   dplyr::summarise(n = n(),
-                   acc = mean(is_correct)) %>%
-  mutate_at(vars(n_Block, participant_id), as.factor)
-length(unique(stats$participant_id))
-
+                   p_risky = mean(is_correct)) %>%
+  mutate_at(vars(n_Block, participant_id,ValueCondition), as.factor)
 #save stats
 #save_data(stats,'df.csv','~/Desktop/')
 ```
 
 
 ```{r ploting}
-
 # plot results
 ###save plot
 getwd()
@@ -138,18 +154,18 @@ ggplot(
   data = stats,
   mapping = aes(
     x = n_Block,
-    y = acc,
+    y = p_risky,
     group = participant_id,
     color = participant_id
   )
 ) +
-  facet_wrap(~ TypeTrial) +
+  facet_wrap(~ ValueCondition) +
   theme(strip.background = element_blank(),
         strip.text.x = element_text(size = 12, color = "Black")) +
   geom_line(alpha = 0.15) +
   geom_point(alpha = 0.1, size = 1) +
   stat_summary(
-    aes(y = acc, group = 1),
+    aes(y = p_risky, group = 1),
     fun = mean,
     colour = "black",
     size = 0.6,
@@ -158,7 +174,7 @@ ggplot(
     group = 1
   ) +
   stat_summary(
-    aes(y = acc, group = 1),
+    aes(y = p_risky, group = 1),
     fun.data = "mean_se",
     geom = "pointrange",
     colour = "black",
@@ -174,10 +190,94 @@ ggplot(
     axis.line = element_line(colour = "black")
   )
 #save graph
-dev.off()
-#
+#dev.off()
 ```
 
+#violin plot
+
+```{r violin plot}
+Data_summary <- summarySE(stats, measurevar="p_risky", groupvars=c("ValueCondition","n_Block"))
+Data_summary$n_Block <- as.numeric(Data_summary$n_Block)
+Data_summary$n_Block_j <- jitter(Data_summary$n_Block, amount = 0.1)
+
+legend_title <- "Value condition"
+#
+tiff(
+  file = "descript_human.tiff",
+  res = 800,
+  width = 4000,
+  height = 2500
+)#save tiff
+###
+ggplot(data = stats,
+       mapping = aes(
+         x = as.factor(n_Block),
+         y = p_risky,
+         fill = ValueCondition
+       )) +
+  geom_split_violin(trim = T,
+                    color = "white",
+                    scale = "area") + #绘制分半的小提琴图
+  geom_point(
+    data = Data_summary,
+    aes(x = as.factor(n_Block), y = p_risky),
+    pch = 19,
+    position = position_dodge(0.5),
+    size = 1
+  ) +
+  geom_errorbar(
+    data = Data_summary,
+    aes(ymin = p_risky - ci, ymax = p_risky + ci),
+    width = 0.05,
+    position = position_dodge(0.5),
+    color = "black",
+    alpha = 0.8,
+    size = 0.5
+  ) + #add error bar  #绘制均值为点图
+  geom_line(
+    data = Data_summary %>% filter(ValueCondition == "High value"),
+    mapping = aes(
+      x = as.numeric(n_Block) - 0.11,
+      y = p_risky
+    ),
+    #linetype = "dashed",
+    alpha = 0.4,
+    show.legend = F
+  ) +
+  geom_line(
+    data = Data_summary %>% filter(ValueCondition == "Low value"),
+    mapping = aes(
+      x = as.numeric(n_Block) + 0.11,
+      y = p_risky,
+    ),
+    linetype = "dashed",
+    alpha = 0.4,
+    show.legend = F
+  ) +
+  scale_fill_manual(legend_title,
+                    values = c("#56B4E9", "#E69F00")) +
+  labs(
+    x = ("Blocks"),
+    y = ("Poportion of risky choice"),
+    x = NULL,
+    #title = "Poportion of risky choice under different expected value condition"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black")
+  ) +
+  stat_compare_means(
+    aes(group = ValueCondition),
+    label = "p.signif",
+    method = "t.test",
+    paired = TRUE,
+    label.y = max(stats$p_risky),
+    hide.ns = T
+  ) # add paired t-test results
+#dev.off()
+```
 
 ```{r ploting cummulated rewards}
 df_cu <- df_new %>%
@@ -190,7 +290,7 @@ df_cu <- df_new %>%
   dplyr::mutate(Cumulative = cumsum(RewardAmount)) %>% #add cumulative rewards)
   dplyr::mutate(trials = row_number()) %>% # add number of trials
   dplyr::ungroup()%>% 
-  rename("Block" = "n_Block")%>% 
+  dplyr::rename("Block" = "n_Block")%>% 
   mutate_at("participant_id", as.factor) %>%
   mutate_at(vars(Cumulative, RewardAmount), as.numeric)
 
@@ -270,10 +370,10 @@ ggplot(data = df_color,
   facet_grid( ~ participant_id) +
   theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
   scale_fill_manual(values = c(
-    "1" = "#F0BE26",
-    "2" = "#296613",
-    "3" = "#CC1F19" ,
-    "4" = "#1B3D80"
+    "1" = "#F0BE26", #yellow
+    "2" = "#296613",#green
+    "3" = "#CC1F19" ,#red
+    "4" = "#1B3D80" #blue
   )) +
   scale_y_continuous(expand = c(0, 0)) +
   labs(x = "Blocks",
@@ -319,6 +419,102 @@ ggplot(data = df_color2,
        y = "Relative proportion",
        fill = "Door options",
        title = " Relative proportion of door choices across blocks (average)")
+```
+
+# Group-level Relative proportion of door choices across blocks (in decision trials)
+
+```{r ploting color options}
+#only decision
+df_color3 <- df_new %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "Door1" ~ "1",
+      response == "Door2" ~ "2",
+      response == "Door3" ~ "3",
+      response == "Door4" ~ "4"
+    )
+  ) %>%
+  filter(TypeTrial == "Decision Trial") %>%
+  select(-expected_response, -is_correct, -response) %>%
+  group_by(n_Block,Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n))%>%
+  mutate_at(vars(n_Block),as.factor)%>%
+  mutate_at("p",as.numeric)
+
+ggplot(data = df_color3,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + 
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  #facet_grid( ~ participant_id) +
+  #theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (in decision trials)")
+```
+```{r}
+#only decision
+df_color4 <- df_new %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "Door1" ~ "1",
+      response == "Door2" ~ "2",
+      response == "Door3" ~ "3",
+      response == "Door4" ~ "4"
+    )
+  ) %>%
+  filter(TypeTrial == "Decision Trial") %>%
+  select(-expected_response, -is_correct, -response) %>%
+  group_by(participant_id,n_Block,Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n))%>%
+  mutate_at(vars(n_Block),as.factor)%>%
+  mutate_at("p",as.numeric)
+
+ggplot(data = df_color4,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + #geom_col和geom_bar这两条命令都可以绘制堆叠柱形图
+  #geom_col(position = 'stack', width = 0.6)+
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  facet_grid( ~ participant_id) +
+  theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks in decison trials (individual level)")
+```
+
+#calculate correlation 
+
+```{r}
+df_cor.wide <- df_color4 %>% dplyr::filter(Response == 2|Response == 3) %>%
+  mutate_at(vars("participant_id","Response"),as.factor) %>%
+  group_by(participant_id,Response) %>%
+  summarise(mean_p = mean(p))%>%
+  ungroup() %>% pivot_wider(id_cols = "participant_id", names_from = "Response", values_from = "mean_p")
+  
+## calculate corr
+df_cor.wide[-1] %>% rstatix::cor_test("2":"3")
+#no correlation  
+```
+  
 
 ```
 
