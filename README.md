@@ -12,6 +12,12 @@ https://colab.research.google.com/drive/1S4l5j8S-xXnizeJ1V795LSCYBG1QFfCD#scroll
 ## Solved Risky Choice Decision Task using Epsilon-Greedy version 
 https://colab.research.google.com/drive/1eInsHxmgeUhS5JHINhZKChe9sxBrc9rK?usp=sharing
 
+(for edit version)
+https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f5-46ab06153e5e/project/test-epsilon-greedy-0e8e03bd-0283-4063-921a-7908541bed0d/%2Fnotebook.ipynb
+
+# Q-Learning (for edit version)
+https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f5-46ab06153e5e/project/QLearning-fb0df3de-dfac-4f24-809c-7e749ca9e77c/%2Fnotebook.ipynb
+
 # Slides
 For project steps and ideas please see 'NMA Presentation.pptx'.
 
