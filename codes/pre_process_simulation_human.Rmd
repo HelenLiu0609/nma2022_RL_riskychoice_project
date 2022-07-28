@@ -1,0 +1,416 @@
+---
+title: "pre_process_simulation_human"
+author: "Helen_Liu"
+date: "25/07/2022"
+output: html_document
+---
+
+```{r load packages}
+library(tidyverse)
+library(ggplot2)
+library(bruceR)
+library(ggpubr)
+
+source('convenient_functions.R')
+source('Function_for_violin_plot.R')
+getwd()
+```
+
+
+```{r import data}
+df_sim <- read.csv("~/Desktop/nma2022_project_RL_riskychoice/data/EpsilonGreedyData_28agents.csv")
+#str(df)
+head(df_sim)
+#check data 
+xxx <- df_sim %>%
+  dplyr::group_by(idx, block,trialtype) %>%
+   dplyr::summarise(n = n())
+```
+
+
+```{r import data}
+df_sim_clean <- df_sim %>%
+  dplyr::select(
+    "participant_id" = "idx",
+    #"trial_index" = "X",
+    "RewardAmount" = "reward",
+    "StimType" = "stimuli",
+    "TrialType" =  "trialtype",
+    "response",
+    "block"
+  )
+
+if ( unique(df_sim_clean$block)[1] == 1){ #ginger's output 
+  df_sim_clean <-  df_sim_clean %>%
+    rename( "n_Block"="block") %>%
+  dplyr::mutate(
+    rsiky_option = case_when(
+      #mark expected response (maximize reward)
+      StimType == "green/yellow" | StimType == "yellow/green" ~ "green",
+      StimType == "red/blue" | StimType == "blue/red" ~ "blue",
+      StimType == "yellow/red" | StimType == "red/yellow" ~ "red",
+      StimType == "blue/yellow" | StimType == "yellow/blue" ~ "blue",
+      StimType == "green/red" | StimType == "red/green" ~ "red",
+      StimType == "green/blue" | StimType == "blue/green" ~ "blue" 
+    )
+  )  %>%
+   dplyr::mutate(is_risky =
+                  case_when(
+                    #mark accuracy
+                    response == rsiky_option ~ "1",
+                    response != rsiky_option ~ "0"
+                  ))%>%
+  mutate_at(vars(n_Block,participant_id,TrialType,response,rsiky_option),as.factor)
+}else{
+  df_sim_clean <-  df_sim_clean %>% # yikang's output
+    dplyr::mutate(
+    n_Block = case_when(
+      #correct the block numbers
+      block == "0" ~ "1",
+      block == "1" ~ "2",
+      block == "2" ~ "3",
+      block == "3" ~ "4",
+      block == "4" ~ "5",
+      block == "5" ~ "6"
+    )
+  )  %>%
+  dplyr::mutate(
+    rsiky_option = case_when(
+      #mark expected response (maximize reward)
+      StimType == "green/yellow" | StimType == "yellow/green" ~ "green",
+      StimType == "red/blue" | StimType == "blue/red" ~ "blue",
+      StimType == "yellow/red" | StimType == "red/yellow" ~ "red",
+      StimType == "blue/yellow" | StimType == "yellow/blue" ~ "blue",
+      StimType == "green/red" | StimType == "red/green" ~ "red",
+      StimType == "green/blue" | StimType == "blue/green" ~ "blue" 
+    )
+  )  %>%
+   dplyr::mutate(is_risky =
+                  case_when(
+                    #mark accuracy
+                    response == rsiky_option ~ "1",
+                    response != rsiky_option ~ "0"
+                  ))%>%
+  mutate_at(vars(n_Block,participant_id,TrialType,response,rsiky_option),as.factor)%>%
+  select(-block)
+}
+  
+```
+
+
+```{r import data}
+xxx <- df_sim_clean %>% filter(TrialType == "decision")%>%
+  dplyr::group_by(participant_id, n_Block) %>%
+   dplyr::summarise(n = n())
+
+```
+# decision trials
+```{r decision}
+df_sim_decision <- df_sim_clean %>%
+  dplyr::filter(TrialType == "decision") %>% #only select decision
+  dplyr::mutate(
+    ValueCondition =
+      case_when(
+        #mark high vs low value
+        StimType == "green/yellow" ~ "Low value",
+        StimType == "yellow/green" ~ "Low value",
+        StimType == "red/blue" ~ "High value",
+        StimType == "blue/red" ~ "High value",
+      )
+  ) %>%
+  dplyr::mutate(
+    risky_choice =
+      case_when(
+        #mark risky choices
+        StimType == "green/yellow" ~ "green",
+        StimType == "yellow/green" ~ "green",
+        StimType == "red/blue" ~ "blue",
+        StimType == "blue/red" ~ "blue",
+      )
+  ) %>%
+   dplyr::mutate(is_risky =
+                  case_when(
+                    #mark accuracy
+                    response == risky_choice ~ "1",
+                    response != risky_choice ~ "0"
+                  ))
+head(df_sim_decision)
+#length(unique(df_new$participant_id)) #check participants’ number
+
+#check data 
+xxx <- df_sim_decision %>%
+  dplyr::group_by(participant_id, n_Block) %>%
+   dplyr::summarise(n = n())
+```
+
+
+```{r plot data}
+colnames(df_sim_decision)
+stats <- df_sim_decision %>%
+  dplyr::group_by(participant_id, n_Block,ValueCondition) %>%
+  mutate_at("is_risky", as.numeric) %>%
+  dplyr::summarise(n = n(),
+                   p_risky = mean(is_risky)) %>%
+  mutate_at(vars(n_Block, participant_id,ValueCondition), as.factor)
+```
+
+
+```{r plot data}
+Data_summary <- summarySE(stats, measurevar="p_risky", groupvars=c("ValueCondition","n_Block"))
+Data_summary$n_Block <- as.numeric(Data_summary$n_Block)
+Data_summary$n_Block_j <- jitter(Data_summary$n_Block, amount = 0.1)
+```
+
+
+```{r plot data}
+
+tiff(
+  file = "descript_ginger_human.tiff",
+  res = 800,
+  width = 4500,
+  height = 3500
+)#save tiff
+
+legend_title <- "Value condition"
+ggplot(data = stats,
+       mapping = aes(
+         x = as.factor(n_Block),
+         y = p_risky,
+         fill = ValueCondition
+       )) +
+  geom_split_violin(trim = T,
+                    color = "white",
+                    scale = "area") + #绘制分半的小提琴图
+  geom_point(
+    data = Data_summary,
+    aes(x = as.factor(n_Block), y = p_risky),
+    pch = 19,
+    position = position_dodge(0.5),
+    size = 1
+  ) +
+  geom_errorbar(
+    data = Data_summary,
+    aes(ymin = p_risky - ci, ymax = p_risky + ci),
+    width = 0.05,
+    position = position_dodge(0.5),
+    color = "black",
+    alpha = 0.8,
+    size = 0.5
+  ) + #add error bar  #绘制均值为点图
+  geom_line(
+    data = Data_summary %>% filter(ValueCondition == "High value"),
+    mapping = aes(
+      x = as.numeric(n_Block) - 0.11,
+      y = p_risky
+    ),
+    #linetype = "dashed",
+    alpha = 0.4,
+    show.legend = F
+  ) +
+  geom_line(
+    data = Data_summary %>% filter(ValueCondition == "Low value"),
+    mapping = aes(
+      x = as.numeric(n_Block) + 0.11,
+      y = p_risky,
+    ),
+    linetype = "dashed",
+    alpha = 0.4,
+    show.legend = F
+  ) +
+  scale_fill_manual(legend_title,
+                    values = c("#56B4E9", "#E69F00")) +
+  labs(
+    x = ("Blocks"),
+    y = ("Poportion of risky choice"),
+    x = NULL,
+    #title = "Poportion of risky choice under different expected value condition"
+  ) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.line = element_line(colour = "black")
+  ) +
+  stat_compare_means(
+    aes(group = ValueCondition),
+    label = "p.signif",
+    method = "t.test",
+    paired = TRUE,
+    label.y = max(stats$p_risky),
+    hide.ns = T
+  ) # add paired t-test results
+ dev.off()
+```
+
+# all  cumulative rewards 
+```{r}
+df_sim_cu <- df_sim_clean %>%
+  dplyr::select("participant_id",
+                "RewardAmount",
+                "TrialType",
+                "n_Block") %>%
+  dplyr::group_by(participant_id,
+                  n_Block) %>%
+  dplyr::mutate(Cumulative = cumsum(RewardAmount)) %>% #add cumulative rewards)
+  dplyr::mutate(trials = row_number()) %>% # add number of trials
+  dplyr::ungroup()%>% 
+  dplyr::rename("Block" = "n_Block")%>% 
+  mutate_at("participant_id", as.factor) %>%
+  mutate_at(vars(Cumulative, RewardAmount), as.numeric)
+###
+ggplot(
+  data = df_sim_cu,
+  mapping = aes(
+    x = trials,
+    y = Cumulative,
+    group = participant_id,
+    color = participant_id
+  ))+
+  geom_line(alpha = 0.15)+
+  scale_y_continuous(expand = c(0,0))+
+  facet_grid(~Block, labeller = label_both)+
+  stat_summary(
+    aes(y = Cumulative, group = 1),
+    fun = mean,
+    colour = "black",
+    size = 0.6,
+    geom = "line",
+    alpha = 0.7,
+    group = 1
+  ) +  
+  labs(x = "Trials", y = "Cumulative rewards") +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.position = "none",
+    axis.line = element_line(colour = "black")
+  )
+```
+
+
+```{r}
+# individual
+df_color_sim <- df_sim_clean %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "yellow" ~ "1",
+      response == "green" ~ "2",
+      response == "red" ~ "3",
+      response == "blue" ~ "4"
+    )
+  ) %>%
+  select(-rsiky_option,-is_risky,-response) %>%
+  group_by(participant_id, n_Block, Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n)) %>%
+  mutate_at(vars(n_Block, participant_id), as.factor) %>%
+  mutate_at("p", as.numeric)
+```
+
+
+```{r}
+#colnames(df_color)
+
+ggplot(data = df_color_sim,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + #geom_col和geom_bar这两条命令都可以绘制堆叠柱形图
+  #geom_col(position = 'stack', width = 0.6)+
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  facet_grid( ~ participant_id) +
+  theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26", #yellow
+    "2" = "#296613",#green
+    "3" = "#CC1F19" ,#red
+    "4" = "#1B3D80" #blue
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (individual level)")
+```
+
+# all (average level)
+
+```{r}
+#average 
+df_color_sim2 <- df_sim_clean %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "yellow" ~ "1",
+      response == "green" ~ "2",
+      response == "red" ~ "3",
+      response == "blue" ~ "4"
+    )
+  )%>%
+  select(-rsiky_option,-is_risky,-response)  %>%
+  group_by(n_Block,Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n))%>%
+  mutate_at(vars(n_Block),as.factor)%>%
+  mutate_at("p",as.numeric)
+
+ggplot(data = df_color_sim2,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + #geom_col和geom_bar这两条命令都可以绘制堆叠柱形图
+  #geom_col(position = 'stack', width = 0.6)+
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (average)")
+```
+
+# decision (group-level)
+
+```{r}
+#only decision
+df_color_sim3 <- df_sim_clean %>%
+  dplyr::mutate(
+    Response = case_when(
+      response == "yellow" ~ "1",
+      response == "green" ~ "2",
+      response == "red" ~ "3",
+      response == "blue" ~ "4"
+    )
+  ) %>%
+  filter(TrialType == "decision") %>%
+  select(-rsiky_option,-is_risky,-response) %>%
+  group_by(n_Block,Response) %>%
+  dplyr::summarise(n = n()) %>%
+  mutate(p = n / base::sum(n))%>%
+  mutate_at(vars(n_Block),as.factor)%>%
+  mutate_at("p",as.numeric)
+
+ggplot(data = df_color_sim3,
+       aes(x = n_Block, y = 100 * p, fill = Response)) + 
+  geom_bar(position = "stack",
+           stat = "identity",
+           width = 0.6) +
+  #facet_grid( ~ participant_id) +
+  #theme(strip.text.x = element_blank()) + #remove Labels from Facet Plot
+  scale_fill_manual(values = c(
+    "1" = "#F0BE26",
+    "2" = "#296613",
+    "3" = "#CC1F19" ,
+    "4" = "#1B3D80"
+  )) +
+  scale_y_continuous(expand = c(0, 0)) +
+  labs(x = "Blocks",
+       y = "Relative proportion",
+       fill = "Door options",
+       title = " Relative proportion of door choices across blocks (in decision trials)")
+```
+
+

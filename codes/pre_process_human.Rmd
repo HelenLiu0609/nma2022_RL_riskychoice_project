@@ -461,6 +461,7 @@ ggplot(data = df_color3,
        fill = "Door options",
        title = " Relative proportion of door choices across blocks (in decision trials)")
 ```
+
 ```{r}
 #only decision
 df_color4 <- df_new %>%
