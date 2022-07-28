@@ -56,15 +56,28 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However, t
 - [pre_process_human.Rmd](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/codes/pre_process_human.Rmd) #used to pre process the real human data
 - [pre_processsing_pigeons.Rmd](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/codes/pre_processsing_pigeons.Rmd) #used to pre process the pigeon data
 # Main results
-![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_human.jpg)
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_human.jpg"width="760" height="480">
+</div>
+<p align="center">Risk preference in decision trials for human across 6 blocks.</p>
 
-Note: Risk preference in catch trials vs decision trials for human across 6 blocks. The analysis was based on data from 28 independent samples. 
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_yikang_human.jpg"width="700" height="480">
+</div>
+<p align="center">Risk preference in decision trials across 6 blocks (Generated from weight model)</p>
+
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_ginger_human.jpg"width="700" height="480">
+</div>
+<p align="center">Risk preference in decision trials across 6 blocks (Generated from Epsilon Greedy model)</p>
+
+
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript2_human.jpg)
 
-Note: Accumulated rewards for human across 6 blocks. The analysis was based on data from 28 independent samples. 
+<p align="center">Accumulated rewards for human across 6 blocks.</p>
 
 
 ![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/ppc_human.jpg)
-Note: Relative proportion of door choices across blocks at individual level.
+<p align="center">Relative proportion of door choices across blocks at individual level.</p>
 
 
