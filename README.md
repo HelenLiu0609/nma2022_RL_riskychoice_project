@@ -48,6 +48,9 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However, t
 
 ![Task schematics](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/task_scematic.png)
 
+## Theories
+
+
 ## Datasheets description 
 - [orignial article](https://github.com/HelenLiu0609/SPE_edu_meta/blob/main/datasheets/summary%20%26%20codebook_final.xlsx) 
 - [human raw data](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/data/human_data.csv) # 
