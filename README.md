@@ -76,7 +76,7 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However, t
 <p align="center">Risk preference in decision trials for human across 6 blocks.</p>
 
 <div align=center>
-<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_yikang_human.jpg"width="700" height="480">
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_data_arbitrary.jpg"width="700" height="480">
 </div>
 <p align="center">Risk preference in decision trials across 6 blocks (Generated from weight model)</p>
 
@@ -86,7 +86,7 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However, t
 <p align="center">Risk preference in decision trials across 6 blocks (Generated from Epsilon Greedy model)</p>
 
 
-![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript2_human.jpg)
+![Descriptive plot](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/descript_cumu_reward_human.jpg)
 
 <p align="center">Accumulated rewards for human across 6 blocks.</p>
 
