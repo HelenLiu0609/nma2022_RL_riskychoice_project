@@ -18,7 +18,7 @@ getwd()
 
 
 ```{r import data}
-df_sim <- read.csv("~/Desktop/nma2022_project_RL_riskychoice/data/EpsilonGreedyData_28agents.csv")
+df_sim <- read.csv("~/Desktop/nma2022_project_RL_riskychoice/data/fakedata_epsilon_06.csv")
 #str(df)
 head(df_sim)
 #check data 
@@ -97,13 +97,6 @@ if ( unique(df_sim_clean$block)[1] == 1){ #ginger's output
   
 ```
 
-
-```{r import data}
-xxx <- df_sim_clean %>% filter(TrialType == "decision")%>%
-  dplyr::group_by(participant_id, n_Block) %>%
-   dplyr::summarise(n = n())
-
-```
 # decision trials
 ```{r decision}
 df_sim_decision <- df_sim_clean %>%
@@ -165,7 +158,7 @@ Data_summary$n_Block_j <- jitter(Data_summary$n_Block, amount = 0.1)
 ```{r plot data}
 
 tiff(
-  file = "descript_ginger_human.tiff",
+  file = "descript_data_arbitrary.tiff",
   res = 800,
   width = 4500,
   height = 3500
@@ -178,6 +171,7 @@ ggplot(data = stats,
          y = p_risky,
          fill = ValueCondition
        )) +
+  scale_y_continuous(limits = c(0, 1))+ # set 0
   geom_split_violin(trim = T,
                     color = "white",
                     scale = "area") + #绘制分半的小提琴图
@@ -303,9 +297,12 @@ df_color_sim <- df_sim_clean %>%
   select(-rsiky_option,-is_risky,-response) %>%
   group_by(participant_id, n_Block, Response) %>%
   dplyr::summarise(n = n()) %>%
-  mutate(p = n / base::sum(n)) %>%
+  mutate(p = n / 40) %>%
   mutate_at(vars(n_Block, participant_id), as.factor) %>%
   mutate_at("p", as.numeric)
+
+
+
 ```
 
 
@@ -349,7 +346,7 @@ df_color_sim2 <- df_sim_clean %>%
   select(-rsiky_option,-is_risky,-response)  %>%
   group_by(n_Block,Response) %>%
   dplyr::summarise(n = n()) %>%
-  mutate(p = n / base::sum(n))%>%
+  mutate(p = n / 40)%>%
   mutate_at(vars(n_Block),as.factor)%>%
   mutate_at("p",as.numeric)
 
@@ -389,7 +386,7 @@ df_color_sim3 <- df_sim_clean %>%
   select(-rsiky_option,-is_risky,-response) %>%
   group_by(n_Block,Response) %>%
   dplyr::summarise(n = n()) %>%
-  mutate(p = n / base::sum(n))%>%
+  mutate(p = n / 24)%>%
   mutate_at(vars(n_Block),as.factor)%>%
   mutate_at("p",as.numeric)
 
