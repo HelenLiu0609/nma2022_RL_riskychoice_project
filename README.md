@@ -17,7 +17,7 @@ https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f
 ## Q-Learning 
 https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f5-46ab06153e5e/project/QLearning-fb0df3de-dfac-4f24-809c-7e749ca9e77c/%2Fnotebook.ipynb (for edit version)
 
-# Slides
+## Slides
 For project steps and ideas please see 'NMA Presentation.pptx'.
 
 
@@ -47,6 +47,20 @@ Trial order was randomized within blocks. Each door appeared equally often on ei
 Pigeons were tested on severals test sessions consisted of 10 trials. However, to be comparable with the human data, we manually devided the trials into 6 blocks (following tranning sessions). In each block, the 8 choice trials consisted of 24 decision trials and 24 catch trials. On decisions trials, the pigeon choose between the two stimuli that led to the risky and safe outcomes with equal expected values (low or high). On catch trials, the pigeon choose between two stimuli that led to outcomes with unequal expected values. Sessions were counterbalanced so that each stimulus appeared twice on each side. Trial order was randomized.
 
 ![Task schematics](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/task_scematic.png)
+
+## Theories
+**Prospect Theory**
+
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/prospect_mapping.png"width="500" height="348">
+</div>
+
+**Tri-reference Point Theory**
+
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/tri_reference_point_mapping.png"width="500" height="348">
+</div>
+
 
 ## Datasheets description 
 - [orignial article](https://github.com/HelenLiu0609/SPE_edu_meta/blob/main/datasheets/summary%20%26%20codebook_final.xlsx) 
