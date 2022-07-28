@@ -17,7 +17,7 @@ https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f
 ## Q-Learning 
 https://deepnote.com/workspace/praewpiraya-wiwatphonthana-e5d5d5ca-246d-4127-a9f5-46ab06153e5e/project/QLearning-fb0df3de-dfac-4f24-809c-7e749ca9e77c/%2Fnotebook.ipynb (for edit version)
 
-# Slides
+## Slides
 For project steps and ideas please see 'NMA Presentation.pptx'.
 
 
@@ -49,6 +49,17 @@ Pigeons were tested on severals test sessions consisted of 10 trials. However, t
 ![Task schematics](https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/task_scematic.png)
 
 ## Theories
+**Prospect Theory**
+
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/prospect_mapping.png"width="500" height="348">
+</div>
+
+**Tri-reference Point Theory**
+
+<div align=center>
+<img src="https://github.com/HelenLiu0609/nma2022_RL_riskychoice_project/blob/main/plots/tri_reference_point_mapping.png"width="500" height="348">
+</div>
 
 
 ## Datasheets description 
